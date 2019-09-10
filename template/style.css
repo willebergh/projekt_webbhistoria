@@ -21,12 +21,12 @@ body {
     text-transform: uppercase;
     font-family: var(--font-main);
     background-color: var(--color-black);
-    overflow: hidden;
 }
 
 .big-text-background {
     display: flex;
     justify-content: center;
+    align-items: center;
 
     position: fixed;
     left: 50%;
@@ -37,8 +37,41 @@ body {
     font-weight: 900;
     letter-spacing: 5vw;
 }
-.big-text-background :nth-child(2) {
-    text-transform: lowercase;
+.big-text-background :nth-child(1) {
+    margin-right: -350px;
+}
+.big-text-background :nth-child(3) {
+    margin-left: -250px;
+}
+
+.animated-bg {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    width: 1000px;
+    height: 100%;
+}
+.animated-bg :nth-child(*) {
+    position: relative;
+    width: 950px;
+    margin: auto;
+}
+
+.spaceship {
+    display: block;
+    width: 50px !important;
+    position: absolute;
+    top: -25px;
+    left: -25px;
+}
+
+.svgPath_e {
+    fill: none;
+    stroke: var(--color-white);
+    stroke-width: 2px;
+    width: 1080px;
 }
 
 .title-sign {
@@ -62,4 +95,3 @@ body {
     margin-right: -.98em;
     text-align: center;
 }
-
