@@ -13,18 +13,31 @@ const options = {
     duration: 1000
 }
 
-document.getElementById("button-forward")
-    .addEventListener("click", e => {
-        anime({
-            ...options,
-            rotate: `+=${nr}`,
-        });
-    });
+document.getElementById("button-forward").addEventListener("click", e => {
+    return goForward();
+});
 
-document.getElementById("button-backward")
-    .addEventListener("click", e => {
-        anime({
-            ...options,
-            rotate: `-=${nr}`,
-        });
+document.getElementById("button-backward").addEventListener("click", e => {
+    return goBackwards();
+});
+
+document.addEventListener("keydown", e => {
+    const key = e.key;
+    if (key === "ArrowRight") return goForward();
+    if (key === "ArrowLeft") return goBackwards();
+    return;
+})
+
+function goForward() {
+    anime({
+        ...options,
+        rotate: `+=${nr}`,
     });
+}
+
+function goBackwards() {
+    anime({
+        ...options,
+        rotate: `-=${nr}`,
+    });
+}
