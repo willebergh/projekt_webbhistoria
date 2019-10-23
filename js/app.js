@@ -7,11 +7,7 @@ elArr.forEach((el, i) => {
     el.style.transform = `rotate(${nr * i}deg)`
 })
 
-const options = {
-    easing: "easeInOutCubic",
-    targets: ".section",
-    duration: 1000
-}
+
 
 document.getElementById("button-forward").addEventListener("click", e => {
     return goForward();
@@ -28,16 +24,33 @@ document.addEventListener("keydown", e => {
     return;
 })
 
+var isPlaying = false;
+var options = {
+    easing: "easeInOutCubic",
+    targets: ".section",
+    duration: 1000,
+    begin: () => {
+        isPlaying = true;
+    },
+    complete: () => {
+        isPlaying = false;
+    }
+}
+
 function goForward() {
-    anime({
-        ...options,
-        rotate: `+=${nr}`,
-    });
+    if (!isPlaying) {
+        anime({
+            ...options,
+            rotate: `+=${nr}`,
+        });
+    }
 }
 
 function goBackwards() {
-    anime({
-        ...options,
-        rotate: `-=${nr}`,
-    });
+    if (!isPlaying) {
+        anime({
+            ...options,
+            rotate: `-=${nr}`,
+        });
+    }
 }
