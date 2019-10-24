@@ -1,56 +1,91 @@
-
-
-const elArr = document.querySelectorAll(".section");
-const nr = 360 / elArr.length;
-
-elArr.forEach((el, i) => {
-    el.style.transform = `rotate(${nr * i}deg)`
-})
-
-
-
-document.getElementById("button-forward").addEventListener("click", e => {
-    return goForward();
-});
-
-document.getElementById("button-backward").addEventListener("click", e => {
-    return goBackwards();
-});
-
-document.addEventListener("keydown", e => {
-    const key = e.key;
-    if (key === "ArrowRight") return goForward();
-    if (key === "ArrowLeft") return goBackwards();
-    return;
-})
-
-var isPlaying = false;
-var options = {
-    easing: "easeInOutCubic",
-    targets: ".section",
-    duration: 1000,
-    begin: () => {
-        isPlaying = true;
-    },
-    complete: () => {
-        isPlaying = false;
-    }
+function containerStyle(selector) {
+    return `${selector} {
+        width: 100%;
+        height: 100vh;
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        overflow: hidden;
+        position: relative;
+        background-color: #ccc;
+    }`
 }
 
-function goForward() {
-    if (!isPlaying) {
+class Wheel {
+    constructor(options) {
+        console.log("Wheel");
+
+        this.options = options;
+
+        this.initElements();
+        this.initListeners();
+
+        this.pos = {
+            min: 0,
+            current: 0,
+            max: this.targets.length - 1,
+        };
+        this.animeOptions = {
+            easing: "easeOutQuint",
+            targets: ".section",
+            duration: 1000,
+        };
+    }
+
+    initElements() {
+        const container = this.options.container;
+        const targets = document.querySelectorAll(this.options.targets);
+        this.targets = targets;
+        this.nr = 360 / targets.length;
+
+        const style = document.createElement("style");
+        style.innerHTML += containerStyle(container);
+        document.body.appendChild(style);
+
+        targets.forEach((el, i) => {
+            el.style.transform = `rotate(${this.nr * i}deg)`
+        })
+    }
+
+    initListeners() {
+        document.querySelectorAll(".arrow").forEach(el => el.addEventListener("click", this.handleButtonClick));
+        document.addEventListener("keydown", this.handleKeydown);
+    }
+
+    handleButtonClick = e => {
+        const el = e.path.find(el => el.attributes["wheel-button"]);
+        const direction = el.attributes["wheel-direction"].value;
+        this.spin(direction);
+    }
+
+    handleKeydown = e => {
+        const key = e.key;
+        if (key === "ArrowRight") this.spin("antiClockWise");
+        if (key === "ArrowLeft") this.spin("clockWise");
+    }
+
+    spin(direction) {
+        if (direction === "clockWise") {
+            this.pos.current++;
+        }
+
+        if (direction === "antiClockWise") {
+            this.pos.current--;
+        }
+
         anime({
-            ...options,
-            rotate: `+=${nr}`,
+            ...this.animeOptions, rotate: (el, i) => {
+                let rotation = this.nr * this.pos.current + (this.nr * i)
+                return rotation;
+            },
         });
     }
+
 }
 
-function goBackwards() {
-    if (!isPlaying) {
-        anime({
-            ...options,
-            rotate: `-=${nr}`,
-        });
-    }
-}
+const wheel = new Wheel({
+    container: ".wheel",
+    targets: ".section"
+});
