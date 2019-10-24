@@ -1,22 +1,5 @@
-function containerStyle(selector) {
-    return `${selector} {
-        width: 100%;
-        height: 100vh;
-        
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        
-        overflow: hidden;
-        position: relative;
-        background-color: #ccc;
-    }`
-}
-
 class Wheel {
     constructor(options) {
-        console.log("Wheel");
-
         this.options = options;
 
         this.initElements();
@@ -41,7 +24,7 @@ class Wheel {
         this.nr = 360 / targets.length;
 
         const style = document.createElement("style");
-        style.innerHTML += containerStyle(container);
+        style.innerHTML += this.createStyle(container, targets);
         document.body.appendChild(style);
 
         targets.forEach((el, i) => {
@@ -50,8 +33,37 @@ class Wheel {
     }
 
     initListeners() {
-        document.querySelectorAll(".arrow").forEach(el => el.addEventListener("click", this.handleButtonClick));
+        document.querySelectorAll(this.options.buttons).forEach(el => el.addEventListener("click", this.handleButtonClick));
         document.addEventListener("keydown", this.handleKeydown);
+    }
+
+    createStyle(container, targets) {
+        return `${container} {
+            width: 100%;
+            height: 100vh;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            overflow: hidden;
+            position: relative;
+            background-color: #ccc;
+        }
+        
+        ${targets} {
+            width: 1000px; 
+            height: 2000px;
+            position: absolute;
+            top: 50%;
+        }
+    
+        ${targets}__content {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }`
     }
 
     handleButtonClick = e => {
@@ -87,5 +99,6 @@ class Wheel {
 
 const wheel = new Wheel({
     container: ".wheel",
-    targets: ".section"
+    targets: ".section",
+    buttons: ".arrow"
 });
